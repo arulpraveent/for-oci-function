@@ -68,4 +68,4 @@ def get_object(bucketName,objectName):
     logging.getLogger().info("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
     namespace = client.get_namespace().data
     object = client.get_object(namespace, bucketName, objectName)
-    return (object.data.content)
+    return (object.data.raw)
