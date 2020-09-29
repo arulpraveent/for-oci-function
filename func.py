@@ -23,7 +23,7 @@ def handler(ctx, data: io.BytesIO=None):
         except Exception as e:
             logging.getLogger().info(e)
         try:
-        df1 = pandas.read_csv(b)
+            df1 = pandas.read_csv(b)
         except Exception as e:
             logging.getLogger().info(e)
         df = pandas.DataFrame()
@@ -60,6 +60,5 @@ def get_object(bucketName,objectName):
     signer = oci.auth.signers.get_resource_principals_signer()
     client = oci.object_storage.ObjectStorageClient(config={}, signer=signer)
     namespace = client.get_namespace().data
-    try:
-        object = client.get_object(namespace, bucketName, objectName)
+    object = client.get_object(namespace, bucketName, objectName)
     return (object.data.content)
