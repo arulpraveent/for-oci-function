@@ -7,8 +7,7 @@ from fdk import response
 import pandas
 
 import oci.object_storage
-
-logging.getLogger().info("**********************************")
+logging.getLogger().info("*************************************")
 
 def handler(ctx, data: io.BytesIO=None):
     logging.getLogger().info("function handler start")
@@ -19,15 +18,17 @@ def handler(ctx, data: io.BytesIO=None):
         objectName = "check_health_file_obj.csv"
         loc = ["loc"]
         mail = ["mail"]
+        logging.getLogger().info("###########################################")
         a = get_object(bucketName,objectName)
+        logging.getLogger().info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
         try:
             b = io.StringIO(a)
         except Exception as e:
-            logging.getLogger().info(e)
+            logging.getLogger().info("*************************************"+e)
         try:
             df1 = pandas.read_csv(b)
         except Exception as e:
-            logging.getLogger().info(e)
+            logging.getLogger().info("**************************************"+e)
         df = pandas.DataFrame()
         df['mail id'] = mail
         df['location'] = loc
