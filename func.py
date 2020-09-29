@@ -40,7 +40,7 @@ def handler(ctx, data: io.BytesIO=None):
     resp = put_object(bucketName, objectName, wf)
     return response.Response(
         ctx,
-        response_data=json.dumps(resp1),
+        response_data=json.dumps(resp),
         headers={"Content-Type": "application/json"}
     )
 
