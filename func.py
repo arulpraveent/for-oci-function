@@ -21,6 +21,8 @@ def handler(ctx, data: io.BytesIO=None):
         logging.getLogger().info("###########################################")
         a = get_object(bucketName,objectName)
         logging.getLogger().info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+        logging.getLogger().info(a)
+        logging.getLogger().info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
         try:
             b = io.StringIO(a)
         except Exception as e:
