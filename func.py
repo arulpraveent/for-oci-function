@@ -8,6 +8,8 @@ import pandas
 
 import oci.object_storage
 
+logging.getLogger().info("**********************************")
+
 def handler(ctx, data: io.BytesIO=None):
     logging.getLogger().info("function handler start")
     try:
