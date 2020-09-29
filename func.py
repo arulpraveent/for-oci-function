@@ -18,7 +18,7 @@ def handler(ctx, data: io.BytesIO=None):
         mail = body["mail"]
         a = get_object(bucketName,objectName)
         b = io.StringIO(a.decode(encoding='UTF-8'))
-        df1 = pandas.read_csv(b)
+        df1 = pandas.read_csv(b,index_col=0)
         df = pandas.DataFrame()
         df['mail id'] = [mail]
         df['location'] = [loc]
