@@ -22,7 +22,8 @@ def handler(ctx, data: io.BytesIO=None):
         df = pandas.DataFrame()
         df['mail id'] = mail
         df['location'] = loc
-        df2 = df.append(df1,ignore_index=True)
+        df2 = df.append(df1)
+        df2 = df2.reset_index(drop=True, inplace=True)
         wf = df2.to_csv()
     except Exception:
         error = """
