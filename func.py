@@ -7,34 +7,22 @@ from fdk import response
 import pandas
 
 import oci.object_storage
-logging.getLogger().info("*************************************")
 
 def handler(ctx, data: io.BytesIO=None):
-    logging.getLogger().info("function handler start")
     try:
-        #requestbody_str = data.getvalue().decode('UTF-8')
-        #body = json.loads(requestbody_str)
+        requestbody_str = data.getvalue().decode('UTF-8')
+        body = json.loads(requestbody_str)
         bucketName = "Bucket-for-crop-health-project"
         objectName = "check_health_file_obj.csv"
-        loc = ["loc"]
-        mail = ["mail"]
-        logging.getLogger().info("###########################################")
+        loc = body["loc"]
+        mail = body["mail"]
         a = get_object(bucketName,objectName)
-        logging.getLogger().info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-        logging.getLogger().info(a)
-        logging.getLogger().info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-        try:
-            b = io.StringIO(a.decode(encoding='UTF-8'))
-        except Exception as e:
-            logging.getLogger().info("*************************************"+e)
-        try:
-            df1 = pandas.read_csv(b)
-        except Exception as e:
-            logging.getLogger().info("**************************************"+e)
+        b = io.StringIO(a.decode(encoding='UTF-8'))
+        df1 = pandas.read_csv(b)
         df = pandas.DataFrame()
         df['mail id'] = mail
         df['location'] = loc
-        df2 = df.append(df1)
+        df2 = df.append(df1,ignore_index=True)
         wf = df2.to_csv()
     except Exception:
         error = """
@@ -50,7 +38,7 @@ def handler(ctx, data: io.BytesIO=None):
     )
 
 def put_object(bucketName, objectName, content):
-    signer = oci.auth.signers.InstancePrincipalsSecurityTokenSigner()
+    signer = oci.auth.signers.get_resource_principals_signer()
     client = oci.object_storage.ObjectStorageClient(config={}, signer=signer)
     namespace = client.get_namespace().data
     output=""
@@ -62,10 +50,8 @@ def put_object(bucketName, objectName, content):
     return { "state": output }
 
 def get_object(bucketName,objectName):
-    logging.getLogger().info("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
-    signer = oci.auth.signers.InstancePrincipalsSecurityTokenSigner()
+    signer = oci.auth.signers.get_resource_principals_signer()
     client = oci.object_storage.ObjectStorageClient(config={}, signer=signer)
-    logging.getLogger().info("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
     namespace = client.get_namespace().data
     object = client.get_object(namespace, bucketName, objectName)
     return (object.data.content)
