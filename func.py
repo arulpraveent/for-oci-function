@@ -19,7 +19,7 @@ def handler(ctx, data: io.BytesIO=None):
         mail = ["mail"]
         a = get_object(bucketName,objectName)
         try:
-        b = io.StringIO(a)
+            b = io.StringIO(a)
         except Exception as e:
             logging.getLogger().info(e)
         try:
