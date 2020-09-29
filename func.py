@@ -24,7 +24,7 @@ def handler(ctx, data: io.BytesIO=None):
         logging.getLogger().info(a)
         logging.getLogger().info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
         try:
-            b = io.StringIO(a)
+            b = io.StringIO(a.decode(encoding='UTF-8'))
         except Exception as e:
             logging.getLogger().info("*************************************"+e)
         try:
@@ -68,4 +68,4 @@ def get_object(bucketName,objectName):
     logging.getLogger().info("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
     namespace = client.get_namespace().data
     object = client.get_object(namespace, bucketName, objectName)
-    return (object.data.raw)
+    return (object.data.content)
