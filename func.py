@@ -20,9 +20,9 @@ def handler(ctx, data: io.BytesIO=None):
         b = io.StringIO(a.decode(encoding='UTF-8'))
         df1 = pandas.read_csv(b)
         df = pandas.DataFrame()
-        df['mail id'] = mail
-        df['location'] = loc
-        df2 = df.append(df1)
+        df['mail id'] = [mail]
+        df['location'] = [loc]
+        df2 = df1.append(df)
         df2.reset_index(drop=True, inplace=True)
         wf = df2.to_csv()
     except Exception:
