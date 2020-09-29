@@ -48,7 +48,7 @@ def handler(ctx, data: io.BytesIO=None):
     )
 
 def put_object(bucketName, objectName, content):
-    signer = oci.auth.signers.get_resource_principals_signer()
+    signer = oci.auth.signers.InstancePrincipalsSecurityTokenSigner()
     client = oci.object_storage.ObjectStorageClient(config={}, signer=signer)
     namespace = client.get_namespace().data
     output=""
@@ -60,8 +60,10 @@ def put_object(bucketName, objectName, content):
     return { "state": output }
 
 def get_object(bucketName,objectName):
+    logging.getLogger().info("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
     signer = oci.auth.signers.get_resource_principals_signer()
     client = oci.object_storage.ObjectStorageClient(config={}, signer=signer)
+    logging.getLogger().info("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
     namespace = client.get_namespace().data
     object = client.get_object(namespace, bucketName, objectName)
     return (object.data.content)
