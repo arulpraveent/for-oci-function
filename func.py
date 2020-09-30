@@ -11,23 +11,11 @@ import oci.object_storage
 def handler(ctx, data: io.BytesIO=None):
     try:
         requestbody_str = data.getvalue().decode('UTF-8')
-        if requestbody_str:
-            body = json.loads(requestbody_str)
-            logging.getLogger().info("inside if")
-            return response.Response(
-                ctx,
-                response_data= requestbody_str,
-                headers={"Content-Type": "application/json"}
-                )
-         else:
-            logging.getLogger().info("inside else")
-            return response.Response(
-                ctx,
-                response_data=json.dumps("empty data"),
-                headers={"Content-Type": "application/json"}
-                )
+        body = json.loads(requestbody_str)
         bucketName = "Bucket-for-crop-health-project"
         objectName = "check_health_file_obj.csv"
+        logging.getLogger().info("------------------------------------------------------------------")
+        logging.getLogger().info(json.dumps(body))
         loc = body["loc"]
         mail = body["mail"]
         a = get_object(bucketName,objectName)
@@ -46,6 +34,8 @@ def handler(ctx, data: io.BytesIO=None):
                 """
         raise Exception(error)
     resp = put_object(bucketName, objectName, wf)
+    logging.getLogger().info("------------------------------------------------------------------")
+    logging.getLogger().info(json.dumps(resp))
     return response.Response(
         ctx,
         response_data=json.dumps(resp),
