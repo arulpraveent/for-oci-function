@@ -13,12 +13,17 @@ def handler(ctx, data: io.BytesIO=None):
         requestbody_str = data.getvalue().decode('UTF-8')
         if requestbody_str:
             body = json.loads(requestbody_str)
+            return response.Response(
+            ctx,
+            response_data= requestbody_str,
+            headers={"Content-Type": "application/json"}
+            )
          else:
             return response.Response(
             ctx,
             response_data=json.dumps("empty data"),
             headers={"Content-Type": "application/json"}
-        )
+            )
         bucketName = "Bucket-for-crop-health-project"
         objectName = "check_health_file_obj.csv"
         loc = body["loc"]
