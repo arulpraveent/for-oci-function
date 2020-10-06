@@ -57,7 +57,7 @@ def put_object(bucketName, objectName, content):
     output=""
     try:
         object = client.put_object(namespace, bucketName, objectName, content)
-        output = "The unsubcribe is successfull"
+        output = "The unsubscribe is successfull"
     except Exception as e:
         output = "Failed: " + str(e.message)
     return { "state": output }
