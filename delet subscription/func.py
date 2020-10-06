@@ -21,8 +21,8 @@ def handler(ctx, data: io.BytesIO=None):
         objectName = "check_health_file_obj.csv"
         logging.getLogger().info("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
         logging.getLogger().info("Query string: " + json.dumps(body))
-        mail = body["mail"].lower()
-        farm_name = body["farm"]
+        mail = body["mail"][0].lower()
+        farm_name = body["farm"][0]
         if farm_name == "all":
             a = get_object(bucketName,objectName)
             b = io.StringIO(a.decode(encoding='UTF-8'))
