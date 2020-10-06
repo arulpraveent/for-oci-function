@@ -5,35 +5,41 @@ import sys
 import logging
 from fdk import response
 import pandas
+from urllib.parse import urlparse, parse_qs
 
 import oci.object_storage
 
 def handler(ctx, data: io.BytesIO=None):
     try:
-        requestbody_str = data.getvalue().decode('UTF-8')
-        body = json.loads(requestbody_str)
+        requesturl = ctx.RequestURL()
+        logging.getLogger().info("Request URL: " + json.dumps(requesturl))
+        resp["Request URL"] = requesturl
+    
+        # retrieving query string from the request URL, e.g. {"param1":["value"]}
+        parsed_url = urlparse(requesturl)
+        body = parse_qs(parsed_url.query)
         bucketName = "Bucket-for-crop-health-project"
         objectName = "check_health_file_obj.csv"
         logging.getLogger().info("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
-        logging.getLogger().info(json.dumps(body))
-        app_context = dict(ctx.Config())
-        acc_tkn = app_context["acc_tkn"]
-        rply = "Access token not valid"
-        if acc_tkn != body["acc_tkn"]:
-            return response.Response(
-            ctx,
-            response_data=json.dumps(rply),
-            headers={"Content-Type": "application/json"}
-            )
+        logging.getLogger().info("Query string: " + json.dumps(resp["Query String"]))
         mail = body["mail"].lower()
         farm_name = body["farm"]
-        a = get_object(bucketName,objectName)
-        b = io.StringIO(a.decode(encoding='UTF-8'))
-        df = pandas.read_csv(b,index_col=0)
-        index_names = df[ (df['mail id'] == mail) & (df['farm_name'] == farm_name)].index
-        df.drop(index_names, inplace = True)
-        df.reset_index(inplace=True,drop=True)  
-        wf = df.to_csv()
+        if farm_name == "all":
+            a = get_object(bucketName,objectName)
+            b = io.StringIO(a.decode(encoding='UTF-8'))
+            df = pandas.read_csv(b,index_col=0)
+            index_names = df[ (df['mail id'] == mail)].index
+            df.drop(index_names, inplace = True)
+            df.reset_index(inplace=True,drop=True)  
+            wf = df.to_csv()
+        else:
+            a = get_object(bucketName,objectName)
+            b = io.StringIO(a.decode(encoding='UTF-8'))
+            df = pandas.read_csv(b,index_col=0)
+            index_names = df[ (df['mail id'] == mail) & (df['farm_name'] == farm_name)].index
+            df.drop(index_names, inplace = True)
+            df.reset_index(inplace=True,drop=True)  
+            wf = df.to_csv()
     except Exception:
         error = """
                 Input a JSON object in the format: '{"bucketName": "<bucket name>",
@@ -56,7 +62,7 @@ def put_object(bucketName, objectName, content):
     output=""
     try:
         object = client.put_object(namespace, bucketName, objectName, content)
-        output = "Success: Put object '" + objectName + "' in bucket '" + bucketName + "'"
+        output = "The unsubcribtion was successfull"
     except Exception as e:
         output = "Failed: " + str(e.message)
     return { "state": output }
