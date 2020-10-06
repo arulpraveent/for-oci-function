@@ -20,7 +20,7 @@ def handler(ctx, data: io.BytesIO=None):
         bucketName = "Bucket-for-crop-health-project"
         objectName = "check_health_file_obj.csv"
         logging.getLogger().info("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
-        logging.getLogger().info("Query string: " + json.dumps(resp["Query String"]))
+        logging.getLogger().info("Query string: " + json.dumps(body))
         mail = body["mail"].lower()
         farm_name = body["farm"]
         if farm_name == "all":
