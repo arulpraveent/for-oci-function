@@ -13,7 +13,6 @@ def handler(ctx, data: io.BytesIO=None):
     try:
         requesturl = ctx.RequestURL()
         logging.getLogger().info("Request URL: " + json.dumps(requesturl))
-        resp["Request URL"] = requesturl
     
         # retrieving query string from the request URL, e.g. {"param1":["value"]}
         parsed_url = urlparse(requesturl)
