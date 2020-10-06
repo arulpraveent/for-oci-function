@@ -39,13 +39,9 @@ def handler(ctx, data: io.BytesIO=None):
             df.drop(index_names, inplace = True)
             df.reset_index(inplace=True,drop=True)  
             wf = df.to_csv()
-    except Exception:
-        error = """
-                Input a JSON object in the format: '{"bucketName": "<bucket name>",
-                "content": "<content>", "objectName": "<object name>"}'
-                """
-        raise Exception(error)
-    resp = put_object(bucketName, objectName, wf)
+            resp = put_object(bucketName, objectName, wf)
+    except Exception as e:
+        resp = "Failed: " + str(e.message)
     logging.getLogger().info("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
     logging.getLogger().info(json.dumps(resp))
     return response.Response(
